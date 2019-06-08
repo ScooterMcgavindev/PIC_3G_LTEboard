@@ -1,1 +1,1 @@
-# PIC_3G_LTEboard
+Port of Sparkfun's Aruino 3g LTE library to the PIC micro.

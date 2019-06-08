@@ -1,4 +1,5 @@
 #include "sparkfun_lte.h"
+#include "testconfig" // special code to turn on and off test functions
 
 #define LTE_SHIELD_STANDARD_RESPONSE_TIMEOUT 1000
 #define LTE_SHIELD_SET_BAUD_TIMEOUT 500
