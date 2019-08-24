@@ -1,5 +1,6 @@
 #include "sparkfun_lte.h"
-#include "testconfig" // special code to turn on and off test functions
+#include "testconfig.h" // special code to turn on and off test functions
+
 
 #define LTE_SHIELD_STANDARD_RESPONSE_TIMEOUT 1000
 #define LTE_SHIELD_SET_BAUD_TIMEOUT 500
@@ -51,3 +52,22 @@ const char LTE_SHIELD_RESPONSE_OK[] = "OK\r\n";
 // CTRL+Z and ESC ASCII codes for SMS message sends
 const char ASCII_CTRL_Z = 0x1A;
 const char ASCII_ESC = 0x1B;
+
+// power on the board
+void powerOn()
+{
+  TRISA &= ~(1 << POWERPIN); // power pin to low impedence state 
+  PORTA &= ~(1 << POWERPIN); // set pin to zero
+  TRISA |= 1 << POWERPIN; // set pin back to input
+}
+
+void hwReset()
+{
+
+}
+
+LTE_Shield_error_t init(unsigned long baud)
+{
+
+  return -1; // stub
+}
