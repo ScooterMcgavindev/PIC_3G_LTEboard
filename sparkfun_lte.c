@@ -58,12 +58,17 @@ void powerOn()
 {
   TRISA &= ~(1 << POWERPIN); // power pin to low impedence state 
   PORTA &= ~(1 << POWERPIN); // set pin to zero
+  __delay_ms(LTE_SHIELD_POWER_PULSE_PERIOD); // delay some amount of time before putting the pin back into reset
   TRISA |= 1 << POWERPIN; // set pin back to input
 }
 
+// do a hard software reset of the board
 void hwReset()
 {
-
+  TRISA &= ~(1 << RESETPIN); // power pin to low impedence state 
+  PORTA &= ~(1 << RESETPIN); // set pin to zero
+  __delay_ms(LTE_RESET_PULSE_PERIOD); // delay some amount of time before putting the pin back into reset
+  TRISA |= 1 << RESETPIN; // set pin back to input
 }
 
 LTE_Shield_error_t init(unsigned long baud)

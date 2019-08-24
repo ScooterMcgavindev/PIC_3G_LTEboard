@@ -81,6 +81,10 @@ typedef char lte_shield_message_format_t;
 #define LTE_SHIELD_MESSAGE_FORMAT_PDU 0
 #define LTE_SHIELD_MESSAGE_FORMAT_TEXT 1
 
+#ifdef TESTMODE
+#define __delay_ms(x) // dummy macro function
+#endif
+
 struct DateData {
     uint8_t day;
     uint8_t month;
@@ -151,7 +155,6 @@ char PORTC;
 char TRISA;
 char TRISC;
 // dummy of a delay function
-
 
 #endif
 
