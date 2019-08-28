@@ -16,6 +16,9 @@
 #include <stdbool.h>
 #include <stdint.h> // some of the structs need this.  Don't remove
 #include "testconfig.h"
+#ifdef TESTMODE
+#include <stdio.h> // printf is used to test some functions
+#endif
 
 #define LTE_SHIELD_POWER_PIN 5
 #define LTE_SHIELD_RESET_PIN 6
@@ -164,6 +167,16 @@ char TRISC;
 LTE_Shield_error_t init(unsigned long baud); // init takes in a baud rate and dose some basic startup with the lte board
 void powerOn(); // physically turns on the board, see section 2.3.1 on page 11
 void hwReset(); // hardware reset of the board 2.3.3 on page 11
+
+// general AT commands
+LTE_Shield_error_t at();
+LTE_Shield_error_t enableEcho(bool echo);
+char* imei();
+char* imsi();
+char* ccid();
+// special serial commuication functions
+bool send_command(const char *command,bool at); // send a command
+LTE_Shield_error_t sendCommandWithResponse(const char * command, const char * expectedResponse, char * responseDest, unsigned long commandTimeout, bool at); 
 
 // sets the LTE sheild to reseive commands
 // returns true if worked, false if it dosnt

@@ -71,6 +71,32 @@ void hwReset()
   TRISA |= 1 << RESETPIN; // set pin back to input
 }
 
+// send command an AT command
+bool send_command(const char *command,bool at)
+{
+  
+  if(at)
+  {
+    putln(LTE_SHIELD_COMMAND_AT);
+    putln(command);
+    putln("\r");
+  }
+  else
+  {
+    putln(command);
+  }
+
+  return true; 
+}
+
+// send a command but exspect a responce
+LTE_Shield_error_t sendCommandWithResponse(const char * command, const char * expectedResponse, char * responseDest, unsigned long commandTimeout, bool at)
+{
+  unsigned long timeIn = 0;
+  bool found = false;
+  
+}
+
 LTE_Shield_error_t init(unsigned long baud)
 {
 

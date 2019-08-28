@@ -19,6 +19,18 @@ int main()
     printf("%s\n","power pin is an output");
     assert(TRISA & (0x01 << POWERPIN) == 1);
     #endif
+    #ifdef RESETTEST
+    hwReset();
+    #endif
+    #ifdef ATTEST
+    printf("%s\n","testing communication commands...");
+    printf("%s\n","send an AT command");
+    // with at on
+    send_command("-test",true);
+    // with at off
+    send_command("-test",false);
+    printf("%s\n","send a command with a responce...");
+    #endif
 }
 
 #endif
