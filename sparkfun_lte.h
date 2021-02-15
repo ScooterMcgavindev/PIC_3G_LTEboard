@@ -15,6 +15,10 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdint.h> // some of the structs need this.  Don't remove
+#include "testconfig.h"
+#ifdef TESTMODE
+#include <stdio.h> // printf is used to test some functions
+#endif
 
 #define LTE_SHIELD_POWER_PIN 5
 #define LTE_SHIELD_RESET_PIN 6
@@ -29,6 +33,11 @@
 #define MNO_TELSTRA 4
 #define MNO_TMO 5
 #define MNO_CT 6
+
+// pin definitions
+// right now I'm gonna just assume this is all on portA
+#define POWERPIN 0
+#define RESETPIN 1
 
 // LTE error codes, see line 68 
 typedef char LTE_Shield_error_t;
@@ -74,6 +83,10 @@ typedef char lte_shield_socket_protocol_t;
 typedef char lte_shield_message_format_t;
 #define LTE_SHIELD_MESSAGE_FORMAT_PDU 0
 #define LTE_SHIELD_MESSAGE_FORMAT_TEXT 1
+
+#ifdef TESTMODE
+#define __delay_ms(x) // dummy macro function
+#endif
 
 struct DateData {
     uint8_t day;
@@ -121,7 +134,6 @@ struct operator_stats {
     uint8_t act;
 };
 
-// headers for LTE functions 
 
 typedef struct
 {
@@ -129,6 +141,42 @@ typedef struct
     unsigned char powerPin; //...
     unsigned char resetPin;
 } LTE_sheild;
+
+// headers for dev mode functions
+#ifdef TESTMODE
+// headers for the dummy functions
+// prototypes for functions
+void usart_setup(); // setup the registers to correct values 
+void putch(char ch); // send a single char
+void flush(); // flush out the input register
+char getln(char *buffer,char length); // read a number of characters into buffer, length is the max number of chars to be read
+char putln(char *str); // send a full string
+
+// dummy variables for PIC IO registers 
+char PORTA;
+char PORTC;
+char TRISA;
+char TRISC;
+// dummy of a delay function
+
+#endif
+
+// headers for LTE functions
+
+// functions for starting the sheild and doing some basic boot stuff
+LTE_Shield_error_t init(unsigned long baud); // init takes in a baud rate and dose some basic startup with the lte board
+void powerOn(); // physically turns on the board, see section 2.3.1 on page 11
+void hwReset(); // hardware reset of the board 2.3.3 on page 11
+
+// general AT commands
+LTE_Shield_error_t at();
+LTE_Shield_error_t enableEcho(bool echo);
+char* imei();
+char* imsi();
+char* ccid();
+// special serial commuication functions
+bool send_command(const char *command,bool at); // send a command
+LTE_Shield_error_t sendCommandWithResponse(const char * command, const char * expectedResponse, char * responseDest, unsigned long commandTimeout, bool at); 
 
 // sets the LTE sheild to reseive commands
 // returns true if worked, false if it dosnt
@@ -139,6 +187,14 @@ bool begin(unsigned short baud_rate);
 bool poll();
 LTE_Shield_error_t at(); 
 LTE_Shield_error_t sendCommandWithResponse(const char * command, const char * expectedResponse, char * responseDest, unsigned long commandTimeout, bool at);
+
+// functions to start serial communication with the network
+LTE_Shield_error_t init(unsigned long baud); // setup serial communication with the device
+
+// LTE functions for connectiong to and qurreing information about the current network
+char getOperators(struct operator_stats * opRet,unsigned char maxOps);
+
+// getting and setting the APN of the network
 
 
 #endif	/* SPARKFUN_LTE_H */

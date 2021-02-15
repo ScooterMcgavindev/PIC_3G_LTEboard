@@ -1,4 +1,6 @@
 #include "sparkfun_lte.h"
+#include "testconfig.h" // special code to turn on and off test functions
+
 
 #define LTE_SHIELD_STANDARD_RESPONSE_TIMEOUT 1000
 #define LTE_SHIELD_SET_BAUD_TIMEOUT 500
@@ -50,3 +52,53 @@ const char LTE_SHIELD_RESPONSE_OK[] = "OK\r\n";
 // CTRL+Z and ESC ASCII codes for SMS message sends
 const char ASCII_CTRL_Z = 0x1A;
 const char ASCII_ESC = 0x1B;
+
+// power on the board
+void powerOn()
+{
+  TRISA &= ~(1 << POWERPIN); // power pin to low impedence state 
+  PORTA &= ~(1 << POWERPIN); // set pin to zero
+  __delay_ms(LTE_SHIELD_POWER_PULSE_PERIOD); // delay some amount of time before putting the pin back into reset
+  TRISA |= 1 << POWERPIN; // set pin back to input
+}
+
+// do a hard software reset of the board
+void hwReset()
+{
+  TRISA &= ~(1 << RESETPIN); // power pin to low impedence state 
+  PORTA &= ~(1 << RESETPIN); // set pin to zero
+  __delay_ms(LTE_RESET_PULSE_PERIOD); // delay some amount of time before putting the pin back into reset
+  TRISA |= 1 << RESETPIN; // set pin back to input
+}
+
+// send command an AT command
+bool send_command(const char *command,bool at)
+{
+  
+  if(at)
+  {
+    putln(LTE_SHIELD_COMMAND_AT);
+    putln(command);
+    putln("\r");
+  }
+  else
+  {
+    putln(command);
+  }
+
+  return true; 
+}
+
+// send a command but exspect a responce
+LTE_Shield_error_t sendCommandWithResponse(const char * command, const char * expectedResponse, char * responseDest, unsigned long commandTimeout, bool at)
+{
+  unsigned long timeIn = 0;
+  bool found = false;
+  
+}
+
+LTE_Shield_error_t init(unsigned long baud)
+{
+
+  return -1; // stub
+}
